@@ -1,6 +1,7 @@
 package dev.mamede.android2finaliesb;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,6 +43,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     
         firebaseAuth = FirebaseAuthSingleton.getInstance();
+
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(LoginActivity.this, ListCarsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -107,12 +116,12 @@ public class LoginActivity extends AppCompatActivity {
           if (task.isSuccessful()) {
             FirebaseUser user = firebaseAuth.getCurrentUser();
 
-            new AlertDialog.Builder(RegisterActivity.this)
+            new AlertDialog.Builder(LoginActivity.this)
                 .setTitle("Login bem-sucedido")
                 .setMessage("Login realizado com sucesso.")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, ListCarsActivity.class);
                         startActivity(intent);
                         finish();
                     }
@@ -120,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
             } else {
-              new AlertDialog.Builder(RegisterActivity.this)
+              new AlertDialog.Builder(LoginActivity.this)
               .setTitle("Erro de autenticação")
               .setMessage("Falha na autenticação.")
               .setPositiveButton(android.R.string.ok, null)
