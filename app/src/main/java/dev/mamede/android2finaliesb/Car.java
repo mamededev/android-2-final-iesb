@@ -1,6 +1,7 @@
 package dev.mamede.android2finaliesb;
 
 public class Car {
+    private String id;
     private String ano;
     private String anotacoes;
     private String cor;
@@ -23,6 +24,14 @@ public class Car {
         this.placa = placa;
     }
 
+    public String getId() {
+      return id;
+  }
+
+  public void setId(String id) {
+      this.id = id;
+  }
+  
     public String getAno() {
         return ano;
     }
@@ -78,4 +87,12 @@ public class Car {
     public void setPlaca(String placa) {
         this.placa = placa;
     }
+
+    @Override
+public String toString() {
+    return "Car{" +
+        "cor='" + cor + '\'' +
+        ", ano=" + ano +
+        '}';
+}
 }
