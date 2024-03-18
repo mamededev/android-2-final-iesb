@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "577133450581",
+    "project_id": "android-2-final-iesb",
+    "storage_bucket": "android-2-final-iesb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577133450581:android:ffbbdf87b6f2818fa08bdc",
+        "android_client_info": {
+          "package_name": "dev.mamede.android2finaliesb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYi3t2TADSHVlnff8M-gyxmnE1Zjgn9yQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
