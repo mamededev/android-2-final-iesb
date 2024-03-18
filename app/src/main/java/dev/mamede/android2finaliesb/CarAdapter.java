@@ -50,56 +50,61 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         public TextView carColor;
         public TextView carYear;
         Button deleteButton;
-  
-        public CarViewHolder(View view) {
-          super(view);
-          carColor = view.findViewById(R.id.carColor);
-          carYear = view.findViewById(R.id.carYear);
-          deleteButton = view.findViewById(R.id.deleteButton);
-          deleteButton.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  int position = getAdapterPosition();
-                  if (position != RecyclerView.NO_POSITION) {
-                    Car car = carList.get(position);
-                    DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("Cars").child(car.getId());
-                    carRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                removeCarFromList(position);
-                            } else {
-                                // Falha ao deletar
-                                Log.e("CarAdapter", "Falha ao deletar carro", task.getException());
-                            }
-                        }
-                    });
-                  }
-              }
-          });
 
-          itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    Car car = carList.get(position);
-                    Intent intent = new Intent(v.getContext(), CreateCarsActivity.class);
-                    intent.putExtra("CAR_ID", car.getId());
-                    v.getContext().startActivity(intent);
+        public CarViewHolder(View view) {
+            super(view);
+            carColor = view.findViewById(R.id.carColor);
+            carYear = view.findViewById(R.id.carYear);
+            deleteButton = view.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    v.setEnabled(false);
+
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Car car = carList.get(position);
+                        DatabaseReference carRef = FirebaseDatabase.getInstance().getReference("Cars").child(car.getId());
+                        carRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    removeCarFromList(getAdapterPosition());
+                                } else {
+                                    // Falha ao deletar
+                                    Log.e("CarAdapter", "Falha ao deletar carro", task.getException());
+                                }
+                                v.setEnabled(true);
+                            }
+                        });
+                    }
                 }
-            }
-        });
-      }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Car car = carList.get(position);
+                        Intent intent = new Intent(v.getContext(), CreateCarsActivity.class);
+                        intent.putExtra("CAR_ID", car.getId());
+                        v.getContext().startActivity(intent);
+                    }
+                }
+            });
+        }
     }
 
     private void removeCarFromList(int position) {
-      carList.remove(position);
-      notifyItemRemoved(position);
-  }
-  
+        if (position >= 0 && position < carList.size()) {
+            carList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public void updateCars(List<Car> cars) {
-      this.carList = cars;
-      notifyDataSetChanged();
-  }
+        this.carList = cars;
+        notifyDataSetChanged();
+    }
 }
