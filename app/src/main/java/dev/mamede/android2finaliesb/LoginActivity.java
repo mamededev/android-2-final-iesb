@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -59,6 +61,21 @@ public class LoginActivity extends AppCompatActivity {
               startActivity(intent);
           }
       });
+
+        findViewById(R.id.main).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                View focusedView = getCurrentFocus();
+
+                if (focusedView != null) {
+                    imm.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    focusedView.clearFocus();
+                }
+
+                return true;
+            }
+        });
     }
 
     private void signIn() {
@@ -87,12 +104,28 @@ public class LoginActivity extends AppCompatActivity {
     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {
-            if (task.isSuccessful()) {
-                // Login realizado com sucesso
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                // Atualize a interface do usuário aqui
+          if (task.isSuccessful()) {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+
+            new AlertDialog.Builder(RegisterActivity.this)
+                .setTitle("Login bem-sucedido")
+                .setMessage("Login realizado com sucesso.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
             } else {
-                // Se o login falhar, exiba uma mensagem para o usuário.
+              new AlertDialog.Builder(RegisterActivity.this)
+              .setTitle("Erro de autenticação")
+              .setMessage("Falha na autenticação.")
+              .setPositiveButton(android.R.string.ok, null)
+              .setIcon(android.R.drawable.ic_dialog_alert)
+              .show();
             }
         }
     });
